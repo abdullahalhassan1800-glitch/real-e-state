@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Havenly — Luxury Real Estate</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        navy: { 50:'#f2f6fb', 100:'#e2ebf5', 700:'#12314f', 800:'#0d2338', 900:'#081726' },
+        gold: { 400:'#e0b558', 500:'#c9992f', 600:'#a87d21' }
+      },
+      fontFamily: {
+        display: ['Fraunces','serif'],
+        sans: ['Inter','system-ui','sans-serif']
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .hero-grad { background: radial-gradient(120% 90% at 15% 10%, rgba(12,44,74,.92) 0%, rgba(8,23,38,.85) 45%, rgba(8,23,38,.65) 100%); }
+  .card-img { transition: transform .8s cubic-bezier(.2,.7,.3,1); }
+  .prop-card:hover .card-img { transform: scale(1.08); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  input[type=range] { -webkit-appearance:none; appearance:none; height:5px; border-radius:99px; background:#e2e8f0; outline:none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#0d2338; border:4px solid #e0b558; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  input[type=range]::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:#0d2338; border:4px solid #e0b558; cursor:pointer; }
+  .fade-mask { -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+  @keyframes floaty { 0%,100%{ transform: translateY(0)} 50%{ transform: translateY(-12px)} }
+  .floaty { animation: floaty 6s ease-in-out infinite; }
+  .marquee { animation: slide 28s linear infinite; }
+  @keyframes slide { from { transform: translateX(0)} to { transform: translateX(-50%)} }
+</style>
+</head>
+<body class="bg-white text-navy-900 antialiased">
+
+<!-- ================= NAV ================= -->
+<header id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex items-center justify-between h-20">
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 grid place-items-center shadow-lg shadow-gold-500/20">
+          <svg class="w-5 h-5 text-navy-900" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg>
+        </div>
+        <span id="brand" class="font-display text-2xl font-600 tracking-tight text-white transition-colors">Havenly</span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-9 text-sm font-medium">
+        <a class="navlink text-white/80 hover:text-gold-400 transition" href="#listings">Buy</a>
+        <a class="navlink text-white/80 hover:text-gold-400 transition" href="#neighborhoods">Neighborhoods</a>
+        <a class="navlink text-white/80 hover:text-gold-400 transition" href="#services">Services</a>
+        <a class="navlink text-white/80 hover:text-gold-400 transition" href="#agents">Agents</a>
+        <a class="navlink text-white/80 hover:text-gold-400 transition" href="#calc">Calculator</a>
+      </nav>
+      <div class="hidden lg:flex items-center gap-3">
+        <a href="#contact" class="navlink text-sm font-medium text-white/85 hover:text-gold-400 transition">Sign in</a>
+        <a href="#contact" class="text-sm font-semibold px-5 py-2.5 rounded-full bg-gold-400 text-navy-900 hover:bg-gold-500 transition shadow-lg shadow-gold-500/25">List Property</a>
+      </div>
+      <button id="burger" aria-label="Menu" class="lg:hidden w-11 h-11 grid place-items-center rounded-xl bg-white/10 text-white backdrop-blur border border-white/15">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="lg:hidden hidden bg-navy-900/97 backdrop-blur-xl border-t border-white/10">
+    <div class="px-6 py-6 flex flex-col gap-1 text-white">
+      <a href="#listings" class="mob py-3 border-b border-white/10">Buy</a>
+      <a href="#neighborhoods" class="mob py-3 border-b border-white/10">Neighborhoods</a>
+      <a href="#services" class="mob py-3 border-b border-white/10">Services</a>
+      <a href="#agents" class="mob py-3 border-b border-white/10">Agents</a>
+      <a href="#calc" class="mob py-3 border-b border-white/10">Calculator</a>
+      <a href="#contact" class="mob mt-4 text-center py-3 rounded-full bg-gold-400 text-navy-900 font-semibold">List Property</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="relative min-h-[100svh] flex items-center pt-28 pb-16 overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80" alt="Modern home" class="absolute inset-0 w-full h-full object-cover">
+  <div class="absolute inset-0 hero-grad"></div>
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8 w-full">
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center gap-2 text-xs font-semibold tracking-[.2em] uppercase text-gold-400 bg-white/10 border border-white/15 backdrop-blur px-4 py-2 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-gold-400"></span> 2,400+ homes sold this year
+      </span>
+      <h1 class="font-display text-white mt-6 text-[2.7rem] leading-[1.05] sm:text-6xl lg:text-7xl font-600 tracking-tight">
+        Find the place<br>you'll call <em class="text-gold-400 not-italic">home</em>.
+      </h1>
+      <p class="mt-6 text-lg text-white/75 max-w-xl leading-relaxed">
+        Curated listings, honest guidance, and a team that treats your move like it's their own. Explore handpicked properties across the country's most-loved neighborhoods.
+      </p>
+    </div>
+
+    <!-- Search -->
+    <div class="mt-10 glass rounded-3xl p-3 shadow-2xl shadow-black/30 max-w-5xl">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+        <div class="px-4 py-3 rounded-2xl hover:bg-white/60 transition">
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-navy-700/60">Location</label>
+          <input id="fLocation" list="cities" placeholder="City or ZIP" class="w-full bg-transparent outline-none text-navy-900 font-medium placeholder-navy-900/35 mt-0.5">
+          <datalist id="cities"><option>Aspen, CO</option><option>Austin, TX</option><option>Miami, FL</option><option>Seattle, WA</option><option>Brooklyn, NY</option><option>Malibu, CA</option></datalist>
+        </div>
+        <div class="px-4 py-3 rounded-2xl hover:bg-white/60 transition border-t md:border-t-0 md:border-l border-navy-900/10">
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-navy-700/60">Property Type</label>
+          <select id="fType" class="w-full bg-transparent outline-none text-navy-900 font-medium mt-0.5">
+            <option value="all">Any type</option><option value="House">House</option><option value="Condo">Condo</option><option value="Villa">Villa</option><option value="Loft">Loft</option>
+          </select>
+        </div>
+        <div class="px-4 py-3 rounded-2xl hover:bg-white/60 transition border-t md:border-t-0 md:border-l border-navy-900/10">
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-navy-700/60">Max Price · <span id="priceLabel" class="text-gold-600 font-bold">$5M</span></label>
+          <input id="fPrice" type="range" min="400000" max="5000000" step="100000" value="5000000" class="w-full mt-3">
+        </div>
+        <button id="searchBtn" class="rounded-2xl bg-navy-900 text-white font-semibold px-6 py-4 hover:bg-navy-700 transition flex items-center justify-center gap-2 shadow-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/></svg>
+          Search
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl">
+      <div><div class="font-display text-3xl sm:text-4xl text-white font-600" data-count="12500">0</div><div class="text-white/60 text-sm mt-1">Listings</div></div>
+      <div><div class="font-display text-3xl sm:text-4xl text-white font-600" data-count="98">0</div><div class="text-white/60 text-sm mt-1">% Satisfaction</div></div>
+      <div><div class="font-display text-3xl sm:text-4xl text-white font-600" data-count="340">0</div><div class="text-white/60 text-sm mt-1">Expert Agents</div></div>
+      <div><div class="font-display text-3xl sm:text-4xl text-white font-600" data-count="27">0</div><div class="text-white/60 text-sm mt-1">Cities</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST BAR ================= -->
+<section class="border-y border-navy-900/10 bg-navy-50/50 py-7 overflow-hidden">
+  <div class="fade-mask">
+    <div class="flex marquee w-max gap-16 items-center text-navy-900/35 font-display text-xl sm:text-2xl whitespace-nowrap">
+      <span>Forbes</span><span>Architectural Digest</span><span>Dwell</span><span>The Times</span><span>Luxury Living</span><span>Realtor Weekly</span>
+      <span>Forbes</span><span>Architectural Digest</span><span>Dwell</span><span>The Times</span><span>Luxury Living</span><span>Realtor Weekly</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LISTINGS ================= -->
+<section id="listings" class="py-20 sm:py-28 max-w-7xl mx-auto px-5 sm:px-8">
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 reveal">
+    <div>
+      <span class="text-xs font-semibold tracking-[.2em] uppercase text-gold-600">Featured Properties</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-600 mt-3 tracking-tight">Homes worth<br class="hidden sm:block"> falling for</h2>
+    </div>
+    <div class="flex flex-wrap gap-2" id="filters">
+      <button data-f="all" class="filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-900 text-white transition">All</button>
+      <button data-f="House" class="filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-50 text-navy-800 hover:bg-navy-100 transition">Houses</button>
+      <button data-f="Villa" class="filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-50 text-navy-800 hover:bg-navy-100 transition">Villas</button>
+      <button data-f="Condo" class="filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-50 text-navy-800 hover:bg-navy-100 transition">Condos</button>
+      <button data-f="Loft" class="filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-50 text-navy-800 hover:bg-navy-100 transition">Lofts</button>
+    </div>
+  </div>
+
+  <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-12"></div>
+  <p id="empty" class="hidden text-center py-16 text-navy-900/50">No properties match your search. Try widening your filters.</p>
+
+  <div class="text-center mt-12">
+    <button id="loadMore" class="px-8 py-4 rounded-full border-2 border-navy-900 font-semibold hover:bg-navy-900 hover:text-white transition">Load more properties</button>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" class="bg-navy-900 text-white py-20 sm:py-28 relative overflow-hidden">
+  <div class="absolute -top-40 -right-32 w-[36rem] h-[36rem] rounded-full bg-gold-500/10 blur-3xl floaty"></div>
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+      <div class="reveal">
+        <span class="text-xs font-semibold tracking-[.2em] uppercase text-gold-400">Why Havenly</span>
+        <h2 class="font-display text-4xl sm:text-5xl font-600 mt-3 tracking-tight leading-tight">A smarter, calmer way to move</h2>
+        <p class="mt-5 text-white/65 leading-relaxed text-lg">From the first viewing to the final signature, we handle the details so you can focus on the excitement. Transparent pricing, no hidden fees, ever.</p>
+        <div class="mt-10 grid sm:grid-cols-2 gap-5">
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-gold-400/40 transition">
+            <div class="w-11 h-11 rounded-xl bg-gold-400/15 grid place-items-center text-gold-400 mb-3"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3 2 11h3v9h14v-9h3z"/></svg></div>
+            <h3 class="font-semibold text-lg">Verified listings</h3><p class="text-sm text-white/55 mt-1.5">Every home is inspected and photographed by our own team.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-gold-400/40 transition">
+            <div class="w-11 h-11 rounded-xl bg-gold-400/15 grid place-items-center text-gold-400 mb-3"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+            <h3 class="font-semibold text-lg">48-hour tours</h3><p class="text-sm text-white/55 mt-1.5">Book a private viewing and we'll confirm within two days.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-gold-400/40 transition">
+            <div class="w-11 h-11 rounded-xl bg-gold-400/15 grid place-items-center text-gold-400 mb-3"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m5-14H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H6"/></svg></div>
+            <h3 class="font-semibold text-lg">Flat 1.5% fee</h3><p class="text-sm text-white/55 mt-1.5">Sell for less than half of a traditional agent's commission.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-gold-400/40 transition">
+            <div class="w-11 h-11 rounded-xl bg-gold-400/15 grid place-items-center text-gold-400 mb-3"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+            <h3 class="font-semibold text-lg">Legal included</h3><p class="text-sm text-white/55 mt-1.5">Contracts, escrow and closing support handled in-house.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal relative">
+        <div class="rounded-[2rem] overflow-hidden shadow-2xl shadow-black/50">
+          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80" alt="Interior" class="w-full h-[30rem] object-cover">
+        </div>
+        <div class="absolute -bottom-8 -left-4 sm:left-8 glass rounded-2xl p-5 shadow-2xl text-navy-900 w-64">
+          <div class="flex items-center gap-3">
+            <div class="flex -space-x-3">
+              <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80">
+              <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80">
+              <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=100&q=80">
+            </div>
+            <div><div class="font-display text-xl font-600 leading-none">4.9/5</div><div class="text-xs text-navy-900/55 mt-1">from 3,200 reviews</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NEIGHBORHOODS ================= -->
+<section id="neighborhoods" class="py-20 sm:py-28 max-w-7xl mx-auto px-5 sm:px-8">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-xs font-semibold tracking-[.2em] uppercase text-gold-600">Explore</span>
+    <h2 class="font-display text-4xl sm:text-5xl font-600 mt-3 tracking-tight">Neighborhoods we love</h2>
+    <p class="mt-4 text-navy-900/60">Each area has its own rhythm. Find the one that matches yours.</p>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
+    <a href="#listings" class="reveal group relative rounded-3xl overflow-hidden h-72 lg:h-96 lg:row-span-2 lg:col-span-2">
+      <img src="https://images.unsplash.com/photo-1449034446853-66c86144b0ad?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/85 via-navy-900/20 to-transparent"></div>
+      <div class="absolute bottom-6 left-6 text-white"><h3 class="font-display text-3xl font-600">Aspen Highlands</h3><p class="text-white/70 text-sm mt-1">184 properties · from $1.2M</p></div>
+    </a>
+    <a href="#listings" class="reveal group relative rounded-3xl overflow-hidden h-64">
+      <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/85 to-transparent"></div>
+      <div class="absolute bottom-5 left-5 text-white"><h3 class="font-display text-2xl font-600">Brooklyn</h3><p class="text-white/70 text-xs mt-1">421 properties</p></div>
+    </a>
+    <a href="#listings" class="reveal group relative rounded-3xl overflow-hidden h-64">
+      <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/85 to-transparent"></div>
+      <div class="absolute bottom-5 left-5 text-white"><h3 class="font-display text-2xl font-600">Malibu Coast</h3><p class="text-white/70 text-xs mt-1">96 properties</p></div>
+    </a>
+    <a href="#listings" class="reveal group relative rounded-3xl overflow-hidden h-64">
+      <img src="https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/85 to-transparent"></div>
+      <div class="absolute bottom-5 left-5 text-white"><h3 class="font-display text-2xl font-600">Austin East</h3><p class="text-white/70 text-xs mt-1">238 properties</p></div>
+    </a>
+    <a href="#listings" class="reveal group relative rounded-3xl overflow-hidden h-64">
+      <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/85 to-transparent"></div>
+      <div class="absolute bottom-5 left-5 text-white"><h3 class="font-display text-2xl font-600">Miami Bay</h3><p class="text-white/70 text-xs mt-1">312 properties</p></div>
+    </a>
+  </div>
+</section>
+
+<!-- ================= CALCULATOR ================= -->
+<section id="calc" class="py-20 sm:py-28 bg-navy-50/60">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+    <div class="reveal">
+      <span class="text-xs font-semibold tracking-[.2em] uppercase text-gold-600">Plan ahead</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-600 mt-3 tracking-tight leading-tight">What can you<br>comfortably afford?</h2>
+      <p class="mt-5 text-navy-900/60 leading-relaxed">Drag the sliders to estimate your monthly payment. Pre-approval takes about 10 minutes with one of our lending partners.</p>
+      <a href="#contact" class="inline-flex items-center gap-2 mt-8 font-semibold text-navy-900 border-b-2 border-gold-400 pb-1 hover:gap-3 transition-all">Get pre-approved <span>→</span></a>
+    </div>
+    <div class="reveal bg-white rounded-3xl p-7 sm:p-9 shadow-xl shadow-navy-900/5 border border-navy-900/5">
+      <div class="space-y-7">
+        <div>
+          <div class="flex justify-between items-baseline mb-3"><label class="text-sm font-semibold">Home price</label><span id="cPriceL" class="font-display text-xl font-600">$850,000</span></div>
+          <input id="cPrice" type="range" min="200000" max="4000000" step="10000" value="850000" class="w-full">
+        </div>
+        <div>
+          <div class="flex justify-between items-baseline mb-3"><label class="text-sm font-semibold">Down payment</label><span id="cDownL" class="font-display text-xl font-600">20%</span></div>
+          <input id="cDown" type="range" min="5" max="60" step="1" value="20" class="w-full">
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <div class="flex justify-between items-baseline mb-3"><label class="text-sm font-semibold">Rate</label><span id="cRateL" class="font-600">6.2%</span></div>
+            <input id="cRate" type="range" min="2" max="10" step="0.1" value="6.2" class="w-full">
+          </div>
+          <div>
+            <div class="flex justify-between items-baseline mb-3"><label class="text-sm font-semibold">Years</label><span id="cYearsL" class="font-600">30</span></div>
+            <input id="cYears" type="range" min="5" max="40" step="5" value="30" class="w-full">
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 p-6 rounded-2xl bg-navy-900 text-white flex items-center justify-between">
+        <div><div class="text-white/55 text-sm">Estimated monthly</div><div id="cResult" class="font-display text-4xl font-600 text-gold-400 mt-1">$4,166</div></div>
+        <svg class="w-12 h-12 text-white/10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AGENTS ================= -->
+<section id="agents" class="py-20 sm:py-28 max-w-7xl mx-auto px-5 sm:px-8">
+  <div class="text-center max-w-2xl mx-auto reveal">
+    <span class="text-xs font-semibold tracking-[.2em] uppercase text-gold-600">Our team</span>
+    <h2 class="font-display text-4xl sm:text-5xl font-600 mt-3 tracking-tight">Meet your agents</h2>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-7 mt-12" id="agentGrid"></div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="py-20 sm:py-28 bg-navy-900 text-white overflow-hidden">
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+    <div class="flex justify-center gap-1 text-gold-400 mb-8">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.9 3.1 1.1-6.6L.4 6.9l6.6-1L10 0l3 5.9 6.6 1-4.8 4.6 1.1 6.6z"/></svg>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.9 3.1 1.1-6.6L.4 6.9l6.6-1L10 0l3 5.9 6.6 1-4.8 4.6 1.1 6.6z"/></svg>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.9 3.1 1.1-6.6L.4 6.9l6.6-1L10 0l3 5.9 6.6 1-4.8 4.6 1.1 6.6z"/></svg>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.9 3.1 1.1-6.6L.4 6.9l6.6-1L10 0l3 5.9 6.6 1-4.8 4.6 1.1 6.6z"/></svg>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.9 3.1 1.1-6.6L.4 6.9l6.6-1L10 0l3 5.9 6.6 1-4.8 4.6 1.1 6.6z"/></svg>
+    </div>
+    <blockquote id="tQuote" class="font-display text-2xl sm:text-3xl lg:text-4xl leading-snug font-400 transition-opacity duration-500">
+      "We toured six homes in one weekend and closed in under a month. Havenly made something we dreaded feel genuinely joyful."
+    </blockquote>
+    <div class="mt-8 flex items-center justify-center gap-4">
+      <img id="tAvatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-full object-cover ring-2 ring-gold-400/50">
+      <div class="text-left"><div id="tName" class="font-semibold">Sofia Marchetti</div><div id="tRole" class="text-sm text-white/50">Bought in Brooklyn, NY</div></div>
+    </div>
+    <div class="flex justify-center gap-2 mt-10" id="tDots"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT / CTA ================= -->
+<section id="contact" class="py-20 sm:py-28 max-w-7xl mx-auto px-5 sm:px-8">
+  <div class="grid lg:grid-cols-2 gap-0 rounded-[2rem] overflow-hidden shadow-2xl shadow-navy-900/10 border border-navy-900/5">
+    <div class="relative min-h-[22rem] hidden lg:block">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80" class="absolute inset-0 w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/90 to-navy-900/20"></div>
+      <div class="absolute bottom-10 left-10 right-10 text-white">
+        <h3 class="font-display text-3xl font-600">Let's talk about your move</h3>
+        <p class="text-white/65 mt-3 text-sm leading-relaxed">A senior agent will reach out within one business day — no pressure, no obligation.</p>
+        <div class="mt-6 space-y-2 text-sm text-white/75">
+          <div class="flex items-center gap-3"><svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 5a2 2 0 0 1 2-2h2l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v2a2 2 0 0 1-2 2A16 16 0 0 1 3 5Z"/></svg> +1 (415) 555-0199</div>
+          <div class="flex items-center gap-3"><svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 7l9 6 9-6M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/></svg> hello@havenly.com</div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-8 sm:p-12">
+      <h3 class="font-display text-3xl sm:text-4xl font-600 tracking-tight">Book a free consultation</h3>
+      <p class="text-navy-900/55 mt-3">Tell us what you're looking for and we'll curate a shortlist.</p>
+      <form id="form" class="mt-8 space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input required placeholder="Full name" class="w-full px-4 py-3.5 rounded-xl bg-navy-50 border border-transparent focus:border-gold-400 focus:bg-white outline-none transition">
+          <input required type="email" placeholder="Email address" class="w-full px-4 py-3.5 rounded-xl bg-navy-50 border border-transparent focus:border-gold-400 focus:bg-white outline-none transition">
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input placeholder="Phone (optional)" class="w-full px-4 py-3.5 rounded-xl bg-navy-50 border border-transparent focus:border-gold-400 focus:bg-white outline-none transition">
+          <select class="w-full px-4 py-3.5 rounded-xl bg-navy-50 border border-transparent focus:border-gold-400 focus:bg-white outline-none transition text-navy-900/80">
+            <option>I want to buy</option><option>I want to sell</option><option>I want to rent</option><option>Just exploring</option>
+          </select>
+        </div>
+        <textarea rows="4" placeholder="Anything else we should know?" class="w-full px-4 py-3.5 rounded-xl bg-navy-50 border border-transparent focus:border-gold-400 focus:bg-white outline-none transition resize-none"></textarea>
+        <button class="w-full py-4 rounded-xl bg-navy-900 text-white font-semibold hover:bg-navy-700 transition shadow-lg">Request consultation</button>
+        <p id="formMsg" class="hidden text-center text-sm font-medium text-emerald-600 bg-emerald-50 rounded-xl py-3">✓ Thanks! An agent will be in touch shortly.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-navy-900 text-white/70 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 grid place-items-center"><svg class="w-4 h-4 text-navy-900" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg></div>
+          <span class="font-display text-2xl text-white font-600">Havenly</span>
+        </div>
+        <p class="mt-4 text-sm leading-relaxed max-w-sm">Modern real estate for people who care where they live. Licensed in 27 states.</p>
+        <div class="flex gap-3 mt-6">
+          <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-gold-400 hover:text-navy-900 grid place-items-center transition"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.5V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-gold-400 hover:text-navy-900 grid place-items-center transition"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.9c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.9-.1c-3.3-.2-4.8-1.7-4.9-4.9-.1-1.3-.1-1.6-.1-4.9s0-3.5.1-4.8C2.3 4 3.8 2.4 7.1 2.3 8.4 2.2 8.8 2.2 12 2.2Zm0 5.6a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 0 0 0-8.4Zm0 6.9a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4Zm4.4-8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-gold-400 hover:text-navy-900 grid place-items-center transition"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg></a>
+        </div>
+      </div>
+      <div><h4 class="text-white font-semibold mb-4 text-sm">Company</h4><ul class="space-y-2.5 text-sm"><li><a href="#" class="hover:text-gold-400 transition">About us</a></li><li><a href="#agents" class="hover:text-gold-400 transition">Our agents</a></li><li><a href="#" class="hover:text-gold-400 transition">Careers</a></li><li><a href="#" class="hover:text-gold-400 transition">Press</a></li></ul></div>
+      <div><h4 class="text-white font-semibold mb-4 text-sm">Explore</h4><ul class="space-y-2.5 text-sm"><li><a href="#listings" class="hover:text-gold-400 transition">Buy a home</a></li><li><a href="#contact" class="hover:text-gold-400 transition">Sell a home</a></li><li><a href="#" class="hover:text-gold-400 transition">Rentals</a></li><li><a href="#calc" class="hover:text-gold-400 transition">Mortgage tools</a></li></ul></div>
+      <div><h4 class="text-white font-semibold mb-4 text-sm">Newsletter</h4><p class="text-sm mb-4">New listings, market notes, once a week.</p>
+        <form onsubmit="event.preventDefault(); this.reset(); this.querySelector('button').textContent='Subscribed ✓';" class="flex gap-2">
+          <input required type="email" placeholder="Email" class="flex-1 min-w-0 px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-gold-400">
+          <button class="px-4 py-2.5 rounded-lg bg-gold-400 text-navy-900 text-sm font-semibold hover:bg-gold-500 transition whitespace-nowrap">Join</button>
+        </form>
+      </div>
+    </div>
+    <div class="pt-6 flex flex-col sm:flex-row justify-between gap-3 text-xs text-white/45">
+      <p>© 2024 Havenly Real Estate. All rights reserved.</p>
+      <div class="flex gap-6"><a href="#" class="hover:text-gold-400">Privacy</a><a href="#" class="hover:text-gold-400">Terms</a><a href="#" class="hover:text-gold-400">Fair Housing</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= MODAL ================= -->
+<div id="modal" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-navy-900/70 backdrop-blur-sm" data-close></div>
+  <div class="relative h-full overflow-y-auto p-4 sm:p-8 flex items-start sm:items-center justify-center">
+    <div id="modalCard" class="bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 scale-95 opacity-0">
+      <div class="relative">
+        <img id="mImg" class="w-full h-64 sm:h-80 object-cover" src="">
+        <button data-close class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 grid place-items-center hover:bg-white transition shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <span id="mTag" class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-gold-400 text-navy-900 text-xs font-bold"></span>
+      </div>
+      <div class="p-6 sm:p-8">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h3 id="mTitle" class="font-display text-3xl font-600"></h3>
+            <p id="mLoc" class="text-navy-900/55 mt-1.5 flex items-center gap-1.5 text-sm"></p>
+          </div>
+          <div id="mPrice" class="font-display text-3xl font-600 text-gold-600"></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6" id="mSpecs"></div>
+        <p id="mDesc" class="mt-6 text-navy-900/65 leading-relaxed"></p>
+        <div class="mt-6 flex flex-wrap gap-2" id="mFeatures"></div>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="#contact" data-close class="flex-1 text-center py-3.5 rounded-xl bg-navy-900 text-white font-semibold hover:bg-navy-700 transition">Schedule a tour</a>
+          <button data-close class="flex-1 py-3.5 rounded-xl border-2 border-navy-900/15 font-semibold hover:border-navy-900 transition">Contact agent</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const props = [
+  {id:1,title:"Glasshouse Retreat",loc:"Aspen, CO",price:3250000,type:"House",beds:5,baths:4,area:4200,garage:2,tag:"Featured",img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80",desc:"Floor-to-ceiling glass frames the mountain range from every room. A chef's kitchen, heated stone floors and a cedar sauna make winters here effortless.",feat:["Mountain views","Sauna","Heated floors","Smart home"]},
+  {id:2,title:"Marina Sky Loft",loc:"Miami, FL",price:1180000,type:"Loft",beds:2,baths:2,area:1650,garage:1,tag:"New",img:"https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80",desc:"A 24th-floor corner loft with wraparound balconies overlooking Biscayne Bay. Building amenities include a rooftop pool and residents' lounge.",feat:["Bay views","Rooftop pool","Concierge","Gym"]},
+  {id:3,title:"Cedar Ridge Villa",loc:"Malibu, CA",price:4750000,type:"Villa",beds:6,baths:5,area:6100,garage:3,tag:"Luxury",img:"https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80",desc:"An architectural statement on a private bluff. Infinity pool, guest casita, and 180° Pacific views from the great room.",feat:["Ocean views","Infinity pool","Guest house","Wine cellar"]},
+  {id:4,title:"The Brownstone",loc:"Brooklyn, NY",price:2140000,type:"House",beds:4,baths:3,area:2900,garage:0,tag:"Featured",img:"https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80",desc:"Restored 1890s brownstone with original moldings, four working fireplaces and a landscaped garden that feels a world away from the city.",feat:["Garden","Fireplaces","Original details","Cellar"]},
+  {id:5,title:"Nordic Lake Cabin",loc:"Seattle, WA",price:895000,type:"House",beds:3,baths:2,area:1980,garage:1,tag:"Open House",img:"https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=80",desc:"Warm timber interiors, a wood-burning stove and a private dock. Ten minutes from the ferry, a lifetime away from the noise.",feat:["Lakefront","Private dock","Wood stove","Deck"]},
+  {id:6,title:"Sunset Terrace Condo",loc:"Austin, TX",price:640000,type:"Condo",beds:2,baths:2,area:1240,garage:1,tag:"New",img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80",desc:"Bright, efficient and steps from South Congress. Quartz counters, oak floors and a shared courtyard with an outdoor kitchen.",feat:["Walkable","Courtyard","Oak floors","Pet friendly"]},
+  {id:7,title:"Palm Court Residence",loc:"Miami, FL",price:2890000,type:"Villa",beds:5,baths:4,area:4800,garage:2,tag:"Luxury",img:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80",desc:"Mid-century inspired villa with a resort-grade pool deck, outdoor kitchen and a primary suite that opens straight onto the water.",feat:["Pool","Outdoor kitchen","Waterfront","Gated"]},
+  {id:8,title:"Iron & Oak Loft",loc:"Brooklyn, NY",price:1420000,type:"Loft",beds:2,baths:2,area:1850,garage:0,tag:"Featured",img:"https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=80",desc:"A converted factory floor with 14-foot ceilings, exposed steel beams and enormous north-facing windows. Artist-ready.",feat:["14ft ceilings","Exposed brick","Freight elevator","Studio space"]},
+  {id:9,title:"Alpine Modern",loc:"Aspen, CO",price:5200000,type:"Villa",beds:7,baths:6,area:7400,garage:4,tag:"Luxury",img:"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80",desc:"Ski-in, ski-out estate with a heated driveway, indoor pool and a two-storey stone hearth at the centre of the home.",feat:["Ski-in/out","Indoor pool","Elevator","Home theater"]},
+  {id:10,title:"Harbor View Flat",loc:"Seattle, WA",price:775000,type:"Condo",beds:1,baths:1,area:980,garage:1,tag:"New",img:"https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=80",desc:"Compact and beautifully finished, with a west-facing balcony that catches every sunset over Elliott Bay.",feat:["Water views","Balcony","Storage","Doorman"]},
+  {id:11,title:"Hillside Bungalow",loc:"Austin, TX",price:985000,type:"House",beds:3,baths:2,area:2100,garage:2,tag:"Open House",img:"https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80",desc:"A quiet, tree-lined street with a wraparound porch, mature oaks and a detached studio perfect for working from home.",feat:["Porch","Studio","Mature trees","Corner lot"]},
+  {id:12,title:"Coastal White House",loc:"Malibu, CA",price:3980000,type:"House",beds:4,baths:4,area:3600,garage:2,tag:"Featured",img:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=80",desc:"Crisp white volumes, bleached oak and a courtyard pool. Designed for salt air, sandy feet and long dinners outside.",feat:["Courtyard pool","Beach access","Outdoor shower","Solar"]}
+];
+const agents = [
+  {n:"Elena Moreau",r:"Luxury Specialist",s:"148 sales",img:"https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80"},
+  {n:"Marcus Vale",r:"Urban & Lofts",s:"96 sales",img:"https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80"},
+  {n:"Priya Raman",r:"First-time Buyers",s:"212 sales",img:"https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=500&q=80"},
+  {n:"Daniel Okafor",r:"Coastal Properties",s:"131 sales",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80"}
+];
+const quotes = [
+  {q:"We toured six homes in one weekend and closed in under a month. Havenly made something we dreaded feel genuinely joyful.",n:"Sofia Marchetti",r:"Bought in Brooklyn, NY",a:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"},
+  {q:"Our agent talked us out of a house we'd have regretted. That honesty is worth more than any commission rate.",n:"James & Lila Bright",r:"Bought in Austin, TX",a:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"},
+  {q:"Sold above asking in eleven days. The photography and staging advice made all the difference.",n:"Renee Alvarez",r:"Sold in Miami, FL",a:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"}
+];
+
+/* ---------- HELPERS ---------- */
+const fmt = n => n >= 1e6 ? "$"+(n/1e6).toFixed(n%1e6===0?0:2).replace(/\.00$/,'')+"M" : "$"+(n/1000).toFixed(0)+"K";
+const money = n => "$"+n.toLocaleString();
+const favs = new Set();
+
+/* ---------- RENDER LISTINGS ---------- */
+let activeFilter='all', shown=6;
+const grid=document.getElementById('grid'), empty=document.getElementById('empty'), loadMore=document.getElementById('loadMore');
+
+function filtered(){
+  const loc=(document.getElementById('fLocation').value||'').toLowerCase().trim();
+  const type=document.getElementById('fType').value;
+  const max=+document.getElementById('fPrice').value;
+  return props.filter(p=>{
+    const okF = activeFilter==='all'||p.type===activeFilter;
+    const okT = type==='all'||p.type===type;
+    const okL = !loc||p.loc.toLowerCase().includes(loc)||p.title.toLowerCase().includes(loc);
+    const okP = p.price<=max;
+    return okF&&okT&&okL&&okP;
+  });
+}
+function card(p){
+  const isFav=favs.has(p.id);
+  return `<article class="prop-card reveal in group bg-white rounded-3xl overflow-hidden border border-navy-900/8 hover:shadow-2xl hover:shadow-navy-900/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer" data-id="${p.id}">
+    <div class="relative overflow-hidden h-60">
+      <img src="${p.img}" alt="${p.title}" loading="lazy" class="card-img w-full h-full object-cover">
+      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent"></div>
+      <span class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-white/95 text-[11px] font-bold tracking-wide uppercase text-navy-900">${p.tag}</span>
+      <button class="fav absolute top-4 right-4 w-9 h-9 rounded-full grid place-items-center transition ${isFav?'bg-rose-500 text-white':'bg-white/90 text-navy-900 hover:bg-white'}" data-fav="${p.id}" aria-label="Save">
+        <svg class="w-4 h-4 pointer-events-none" fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.3-8.6C.9 9.3 2.6 5.5 6.1 5c2-.3 3.9.8 4.9 2.4C12 5.8 13.9 4.7 15.9 5c3.5.5 5.2 4.3 3.4 7.4C19 16.5 12 21 12 21Z"/></svg>
+      </button>
+      <div class="absolute bottom-4 left-4 text-white font-display text-2xl font-600">${fmt(p.price)}</div>
+    </div>
+    <div class="p-5">
+      <h3 class="font-display text-xl font-600 group-hover:text-gold-600 transition">${p.title}</h3>
+      <p class="text-sm text-navy-900/50 mt-1 flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>${p.loc}</p>
+      <div class="flex items-center gap-4 mt-4 pt-4 border-t border-navy-900/8 text-sm text-navy-900/65">
+        <span class="flex items-center gap-1.5"><b class="text-navy-900">${p.beds}</b> beds</span>
+        <span class="w-px h-4 bg-navy-900/10"></span>
+        <span class="flex items-center gap-1.5"><b class="text-navy-900">${p.baths}</b> baths</span>
+        <span class="w-px h-4 bg-navy-900/10"></span>
+        <span class="flex items-center gap-1.5"><b class="text-navy-900">${p.area.toLocaleString()}</b> sqft</span>
+      </div>
+    </div>
+  </article>`;
+}
+function render(){
+  const list=filtered();
+  grid.innerHTML=list.slice(0,shown).map(card).join('');
+  empty.classList.toggle('hidden', list.length>0);
+  loadMore.style.display = list.length>shown ? '' : 'none';
+}
+render();
+
+document.getElementById('filters').addEventListener('click',e=>{
+  const b=e.target.closest('.filter-btn'); if(!b)return;
+  activeFilter=b.dataset.f; shown=6;
+  document.querySelectorAll('.filter-btn').forEach(x=>{x.className='filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-50 text-navy-800 hover:bg-navy-100 transition';});
+  b.className='filter-btn px-5 py-2.5 rounded-full text-sm font-semibold bg-navy-900 text-white transition';
+  render();
+});
+loadMore.addEventListener('click',()=>{shown+=6;render();});
+document.getElementById('fPrice').addEventListener('input',e=>{
+  document.getElementById('priceLabel').textContent=fmt(+e.target.value);
+});
+document.getElementById('searchBtn').addEventListener('click',()=>{
+  shown=6; render();
+  document.getElementById('listings').scrollIntoView({behavior:'smooth'});
+});
+['fLocation','fType'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{shown=6;render();}));
+
+/* ---------- FAVS + MODAL ---------- */
+grid.addEventListener('click',e=>{
+  const favBtn=e.target.closest('[data-fav]');
+  if(favBtn){ e.stopPropagation(); const id=+favBtn.dataset.fav; favs.has(id)?favs.delete(id):favs.add(id); render(); return; }
+  const c=e.target.closest('[data-id]'); if(c) openModal(+c.dataset.id);
+});
+const modal=document.getElementById('modal'), mCard=document.getElementById('modalCard');
+function openModal(id){
+  const p=props.find(x=>x.id===id); if(!p)return;
+  mImg.src=p.img; mTag.textContent=p.tag; mTitle.textContent=p.title; mPrice.textContent=money(p.price);
+  mLoc.innerHTML='<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>'+p.loc;
+  mDesc.textContent=p.desc;
+  const specs=[["Bedrooms",p.beds],["Bathrooms",p.baths],["Area",p.area.toLocaleString()+" sqft"],["Garage",p.garage||"—"]];
+  mSpecs.innerHTML=specs.map(s=>`<div class="p-4 rounded-xl bg-navy-50 text-center"><div class="font-display text-xl font-600">${s[1]}</div><div class="text-xs text-navy-900/50 mt-0.5">${s[0]}</div></div>`).join('');
+  mFeatures.innerHTML=p.feat.map(f=>`<span class="px-3 py-1.5 rounded-full bg-gold-400/15 text-gold-600 text-xs font-semibold">${f}</span>`).join('');
+  modal.classList.remove('hidden'); document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>{mCard.classList.remove('scale-95','opacity-0');});
+}
+function closeModal(){ mCard.classList.add('scale-95','opacity-0'); document.body.style.overflow=''; setTimeout(()=>modal.classList.add('hidden'),250); }
+modal.addEventListener('click',e=>{ if(e.target.closest('[data-close]')) closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!modal.classList.contains('hidden')) closeModal(); });
+
+/* ---------- AGENTS ---------- */
+document.getElementById('agentGrid').innerHTML=agents.map(a=>`
+  <div class="reveal group text-center">
+    <div class="relative rounded-3xl overflow-hidden aspect-[4/5]">
+      <img src="${a.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+      <div class="absolute inset-x-0 bottom-0 p-4 flex justify-center gap-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">
+        <a href="#contact" class="px-4 py-2 rounded-full bg-white text-navy-900 text-xs font-bold">Message</a>
+        <a href="#contact" class="px-4 py-2 rounded-full bg-gold-400 text-navy-900 text-xs font-bold">Call</a>
+      </div>
+    </div>
+    <h3 class="font-display text-xl font-600 mt-4">${a.n}</h3>
+    <p class="text-sm text-navy-900/50">${a.r}</p>
+    <p class="text-xs text-gold-600 font-semibold mt-1">${a.s}</p>
+  </div>`).join('');
+
+/* ---------- TESTIMONIALS ---------- */
+let ti=0;
+const dots=document.getElementById('tDots');
+dots.innerHTML=quotes.map((_,i)=>`<button data-i="${i}" class="w-2.5 h-2.5 rounded-full transition ${i===0?'bg-gold-400 w-8':'bg-white/25'}"></button>`).join('');
+function setQuote(i){
+  ti=i; const q=quotes[i];
+  const el=document.getElementById('tQuote'); el.style.opacity=0;
+  setTimeout(()=>{ el.textContent='"'+q.q+'"'; tName.textContent=q.n; tRole.textContent=q.r; tAvatar.src=q.a; el.style.opacity=1; },300);
+  [...dots.children].forEach((d,j)=>{ d.className='rounded-full transition h-2.5 '+(j===i?'bg-gold-400 w-8':'bg-white/25 w-2.5'); });
+}
+dots.addEventListener('click',e=>{ const b=e.target.closest('[data-i]'); if(b) setQuote(+b.dataset.i); });
+setInterval(()=>setQuote((ti+1)%quotes.length),6500);
+
+/* ---------- CALCULATOR ---------- */
+const cP=document.getElementById('cPrice'),cD=document.getElementById('cDown'),cR=document.getElementById('cRate'),cY=document.getElementById('cYears');
+function calc(){
+  const price=+cP.value, down=+cD.value, rate=+cR.value, yrs=+cY.value;
+  cPriceL.textContent=money(price); cDownL.textContent=down+'%'; cRateL.textContent=rate.toFixed(1)+'%'; cYearsL.textContent=yrs;
+  const L=price*(1-down/100), r=rate/100/12, n=yrs*12;
+  const m = r===0 ? L/n : L*r/(1-Math.pow(1+r,-n));
+  cResult.textContent='$'+Math.round(m).toLocaleString();
+}
+[cP,cD,cR,cY].forEach(el=>el.addEventListener('input',calc)); calc();
+
+/* ---------- FORM ---------- */
+document.getElementById('form').addEventListener('submit',e=>{
+  e.preventDefault(); e.target.reset();
+  const m=document.getElementById('formMsg'); m.classList.remove('hidden');
+  setTimeout(()=>m.classList.add('hidden'),5000);
+});
+
+/* ---------- NAV SCROLL ---------- */
+const nav=document.getElementById('nav'), brand=document.getElementById('brand');
+function onScroll(){
+  if(window.scrollY>60){
+    nav.classList.add('bg-white/90','backdrop-blur-xl','shadow-lg','shadow-navy-900/5');
+    brand.classList.remove('text-white'); brand.classList.add('text-navy-900');
+    document.querySelectorAll('.navlink').forEach(a=>{a.classList.remove('text-white/80','text-white/85');a.classList.add('text-navy-800');});
+  } else {
+    nav.classList.remove('bg-white/90','backdrop-blur-xl','shadow-lg','shadow-navy-900/5');
+    brand.classList.add('text-white'); brand.classList.remove('text-navy-900');
+    document.querySelectorAll('.navlink').forEach(a=>{a.classList.add('text-white/80');a.classList.remove('text-navy-800');});
+  }
+}
+window.addEventListener('scroll',onScroll); onScroll();
+const burger=document.getElementById('burger'), mm=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>mm.classList.toggle('hidden'));
+document.querySelectorAll('.mob').forEach(a=>a.addEventListener('click',()=>mm.classList.add('hidden')));
+
+/* ---------- REVEAL + COUNTERS ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+const co=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  const el=e.target, t=+el.dataset.count; let c=0, step=t/60;
+  const iv=setInterval(()=>{ c+=step; if(c>=t){c=t;clearInterval(iv);} el.textContent=Math.floor(c).toLocaleString()+(t>=1000?'+':''); },20);
+  co.unobserve(el);
+}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+</script>
+</body>
+</html>
